@@ -2,32 +2,39 @@ const express = require("express");
 const { Server } = require("socket.io");
 const cors = require("cors");
 
-const app = express();
+require("dotenv").config();
 
-const port = 3001;
+const app = express();
+const port = 3005;
 
 app.use(express.json());
-
 app.use(cors());
 
 const server = app.listen(port, () => {
-  console.log(`Server running in port: ${port}`);
+  console.log(`API corriendo en el puerto ${port}`);
 });
 
-const ServerSI = new Server(server, {
+const io = new Server(server, {
   cors: {
     origin: "*",
   },
 });
 
-ServerSI.on("connection", (socket) => {
-  console.log("Cliente conectado");
-
-  socket.on("datos", (message) => {
-    ServerSI.emit("newClient", message);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("Cliente desconectado");
+io.on("connection", (socket) => {
+  console.log("Nuevo usuario conectado:", socket.id);
+  const userChannel = `usuario${socket.id}`;
+  socket.join(userChannel);
+  socket.on("message", (data) => {
+    console.log(data);
+    const { tipo, valor, user } = data;
+    const recipientChannel = `user_${user}`;
+    if (io.sockets.adapter.rooms.has(recipientChannel)) {
+      io.to(recipientChannel).emit("message", {
+        from: socket.decoded.username,
+        message: {valor: valor, tipo: tipo},
+      });
+    } else {
+      console.log(`El usuario ${user} no está conectado actualmente.`);
+    }
   });
 });
