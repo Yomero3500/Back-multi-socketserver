@@ -22,19 +22,12 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log("Nuevo usuario conectado:", socket.id);
-  const userChannel = `usuario${socket.id}`;
-  socket.join(userChannel);
+  socket.join("jrmoch2@gmail.com");
   socket.on("message", (data) => {
-    console.log(data);
     const { tipo, valor, user } = data;
     const recipientChannel = `user_${user}`;
-    if (io.sockets.adapter.rooms.has(recipientChannel)) {
-      io.to(recipientChannel).emit("message", {
-        from: socket.decoded.username,
-        message: {valor: valor, tipo: tipo},
-      });
-    } else {
-      console.log(`El usuario ${user} no está conectado actualmente.`);
-    }
+    console.log(data);
+    io.emit("message", data)
   });
 });
+
