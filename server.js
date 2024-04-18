@@ -22,7 +22,6 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log("Nuevo usuario conectado:", socket.id);
-  socket.join("jrmoch2@gmail.com");
   socket.on("message", (data) => {
     const { tipo, valor, user } = data;
     const recipientChannel = `user_${user}`;
