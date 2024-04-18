@@ -22,7 +22,7 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log("Nuevo usuario conectado:", socket.id);
-  socket.on("message", (data) => {
+  socket.emit("message", (data) => {
     const { tipo, valor, user } = data;
     const recipientChannel = `user_${user}`;
     console.log(data);
