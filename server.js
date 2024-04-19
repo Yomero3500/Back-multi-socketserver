@@ -22,11 +22,17 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log("Nuevo usuario conectado:", socket.id);
+
+  socket.on("joinRoom", (user) => {
+    const roomName = `user_${user}`;
+    socket.join(roomName);
+    console.log(`El usuario ${user} se unió a la sala ${roomName}`);
+  });
+
   socket.on("message", (data) => {
     const { tipo, valor, user } = data;
-    const recipientChannel = `user_${user}`;
+    const recipientRoom = `user_${user}`;
     console.log(tipo, valor, user);
-    io.emit("message", data)
+    io.to(recipientRoom).emit("message", data);
   });
 });
-
