@@ -24,7 +24,7 @@ io.on("connection", (socket) => {
   console.log("Nuevo usuario conectado:", socket.id);
 
   socket.on("joinRoom", (user) => {
-    const roomName = `user_${user}`;
+    const roomName = `${user}`;
     socket.join(roomName);
     console.log(`El usuario ${user} se unió a la sala ${roomName}`);
   });
