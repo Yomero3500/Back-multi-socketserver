@@ -25,7 +25,7 @@ io.on("connection", (socket) => {
   socket.on("message", (data) => {
     const { tipo, valor, user } = data;
     const recipientChannel = `user_${user}`;
-    console.log(data);
+    console.log(tipo, valor, user);
     io.emit("message", data)
   });
 });
